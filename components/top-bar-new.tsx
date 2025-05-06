@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Menu, ChevronDown } from "lucide-react"
+import { useRouter } from 'next/navigation'
 
 interface TopBarProps {
   toggleSidebar: () => void
@@ -9,6 +10,20 @@ interface TopBarProps {
 
 const TopBar: React.FC<TopBarProps> = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const router = useRouter()
+  
+  useEffect(() => {
+    const role = localStorage.getItem('role')
+    console.log('Current role:', role) // Debug log
+    setIsAdmin(role === 'admin')
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth')
+    localStorage.removeItem('role')
+    router.push('/login')
+  }
   
   return (
     <div className="border-b bg-white sticky top-0 z-10">
@@ -32,6 +47,14 @@ const TopBar: React.FC<TopBarProps> = ({ toggleSidebar }) => {
         </div>
         
         <div className="flex items-center gap-3">
+          {isAdmin && (
+            <button
+              onClick={() => router.push('/admin')}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors duration-300 hidden sm:flex items-center"
+            >
+              Yönetim Paneli
+            </button>
+          )}
           <div className="flex flex-col items-end mr-1 hidden sm:flex">
             <span className="font-medium text-sm">Furkan Lüleci</span>
             <span className="text-xs text-gray-500">Pro Plan - 128/2000</span>
@@ -71,7 +94,7 @@ const TopBar: React.FC<TopBarProps> = ({ toggleSidebar }) => {
                   <DropdownItem>Ayarlar</DropdownItem>
                   <DropdownItem>Abonelik</DropdownItem>
                   <div className="border-t my-1" />
-                  <DropdownItem>Çıkış Yap</DropdownItem>
+                  <DropdownItem onClick={handleLogout}>Çıkış Yap</DropdownItem>
                 </div>
               </>
             )}

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Home, Users, BarChart2, Settings, LogOut, FileText, Link2, Video, Menu, X } from "lucide-react"
+import { TakipEkleModal } from '@/components/TakipEkleModal'
 
 interface SidebarProps {
   onViewChange: (view: string) => void
@@ -60,6 +61,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onViewChange, activeView, isOpen, tog
             onClick={() => onViewChange("watchlist")}
             collapsed={!isOpen}
           />
+          
+          {/* Takip Ekle Modal */}
+          <TakipEkleModal collapsed={!isOpen} />
+
           <SidebarItem 
             icon={<FileText className="h-5 w-5" />}
             text="Haber Oluştur"
